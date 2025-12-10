@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BMI Result</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-bg: #ffffff;
+            --text-color: #333333;
+            --border-radius: 12px;
+            --box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: var(--bg-color);
+            margin: 0;
+            color: var(--text-color);
+        }
+
+        .container {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+            animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        h1 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        .result {
+            font-size: 3rem;
+            font-weight: 700;
+            margin: 1rem 0;
+        }
+
+        .category {
+            font-size: 1.5rem;
+            margin-bottom: 2.5rem;
+            font-weight: 600;
+        }
+
+        .underweight {
+            color: #17a2b8;
+        }
+
+        .normal {
+            color: #28a745;
+        }
+
+        .overweight {
+            color: #ffc107;
+        }
+
+        .obese {
+            color: #dc3545;
+        }
+
+        a {
+            text-decoration: none;
+            color: white;
+            background-color: #4a90e2;
+            padding: 0.8rem 2rem;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: background-color 0.3s, box-shadow 0.3s;
+        }
+
+        a:hover {
+            background-color: #357abd;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Your BMI</h1>
+        <div class="result {{CLASS}}">{{BMI}}</div>
+        <div class="category {{CLASS}}">{{CATEGORY}}</div>
+        <a href="/">Calculate Again</a>
+    </div>
+</body>
+
+</html>
