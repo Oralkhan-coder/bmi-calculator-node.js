@@ -1,50 +1,49 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 const bmiService = require('./service/bmiService');
 
 const app = express();
 const port = 3000;
 
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 app.use(express.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 app.get('/', (req, res) => {
-    const templatePath = path.join(__dirname, 'templates', 'form.html');
-    fs.readFile(templatePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading form template:', err);
-            return res.status(500).send('Internal Server Error');
-        }
-        res.send(data);
-    });
+    res.render('form');
 });
 
-app.post('/calculate-bmi', (req, res) => {
-    const weight = parseFloat(req.body.weight);
-    const height = parseFloat(req.body.height);
+app.post('/calculate-bmi', (req, res, next) => {
+    try {
+        const weight = parseFloat(req.body.weight);
+        const height = parseFloat(req.body.height);
 
-    const bmi = bmiService.calculateBMI(weight, height);
+        const bmi = bmiService.calculateBMI(weight, height);
 
-    if (bmi === null) {
-        return res.send('Invalid input. Please enter positive numbers.');
-    }
-
-    const { name: categoryName, class: categoryClass } = bmiService.getBMICategory(bmi);
-
-    const templatePath = path.join(__dirname, 'templates', 'result.html');
-    fs.readFile(templatePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error reading result template:', err);
-            return res.status(500).send('Internal Server Error');
+        if (bmi === null) {
+            throw new Error('Invalid input. Please enter positive numbers.');
         }
 
-        const html = data
-            .replace('{{BMI}}', bmi.toFixed(2))
-            .replace('{{CATEGORY}}', categoryName)
-            .replaceAll('{{CLASS}}', categoryClass);
+        const { name: categoryName, class: categoryClass } = bmiService.getBMICategory(bmi);
 
-        res.send(html);
-    });
+        res.render('result', {
+            bmi: bmi.toFixed(2),
+            category: categoryName,
+            categoryClass: categoryClass
+        });
+    } catch (error) {
+        next(error);
+    }
+});
+
+app.use((req, res, next) => {
+    res.status(404).render('404');
+});
+
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).render('error', { message: err.message });
 });
 
 app.listen(port, () => {

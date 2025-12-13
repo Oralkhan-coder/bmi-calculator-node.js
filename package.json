@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/Oralkhan-coder/calculator-node.js#readme",
   "dependencies": {
+    "ejs": "^3.1.10",
     "express": "^5.2.1"
   }
 }
